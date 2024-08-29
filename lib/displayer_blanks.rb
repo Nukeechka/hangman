@@ -2,7 +2,7 @@
 
 # class DisplayerBlanks
 class DisplayerBlanks
-  def initialize(size)
+  def start_value(size)
     @blank = Array.new(size, '_')
   end
 

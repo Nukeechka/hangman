@@ -9,6 +9,8 @@ class ComputerHost
     correct_position = -1
     secret_word.split('').each_with_index do |letter, index|
       correct_position = index if letter == guessed_letter
+      p letter
+      p guessed_letter
     end
     {
       correct_position: correct_position,

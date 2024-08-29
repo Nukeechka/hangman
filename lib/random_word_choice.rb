@@ -2,14 +2,6 @@
 
 # class RandomWordChoice
 class RandomWordChoice
-  attr_reader :word
-
-  def initialize
-    @word = random_word
-  end
-
-  private
-
   def random_word
     lines = File.readlines('../google-10000-english-no-swears.txt')
     lines
