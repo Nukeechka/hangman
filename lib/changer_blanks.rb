@@ -3,8 +3,10 @@
 # class ChangerBlanks
 class ChangerBlanks
   def changes_blanks(displayer_blanks, changes)
-    return if changes[:correct_position] == -1
+    return if changes[:correct_position].empty?
 
-    displayer_blanks.blank[changes[:correct_position]] = changes[:guessed_letter]
+    changes[:correct_position].each do |index|
+      displayer_blanks.blank[index] = changes[:guessed_letter]
+    end
   end
 end

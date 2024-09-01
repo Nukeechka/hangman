@@ -13,5 +13,9 @@ class DisplayerBlanks
     puts
   end
 
+  def winner?
+    @blank.any?('_')
+  end
+
   attr_accessor :blank
 end
