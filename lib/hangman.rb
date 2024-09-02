@@ -39,7 +39,7 @@ class Hangman
   end
 
   def game_contoller(secret_word)
-    guess = @word_breaker.guess_letter
+    guess = @word_breaker.way_to_guess
     @changer_blanks.changes_blanks(@display_blanks, checker(secret_word, guess))
     entered_letters
     @display_blanks.show_blanks
