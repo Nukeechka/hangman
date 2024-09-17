@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'yaml'
 require_relative 'random_word_choice'
 require_relative 'displayer_blanks'
 require_relative 'changer_blanks'
@@ -7,6 +8,8 @@ require_relative 'computer_host'
 require_relative 'word_breaker'
 # class Hangman
 class Hangman
+  attr_accessor :chances
+
   def initialize(host:, word_breaker:, changer_blanks:, random_word_choice:, display_blanks:)
     @computer_host = host
     @random_word_choice = random_word_choice
@@ -14,26 +17,58 @@ class Hangman
     @word_breaker = word_breaker
     @word_breaker = word_breaker
     @display_blanks = display_blanks
+    @chances = 8
+    @secret_word = ''
   end
 
-  def play # rubocop:disable Metrics/MethodLength
+  def save_contoller
+    return unless Dir.exist?('saves')
+
+    puts 'Do you want load your current progress?[yes][no]'
+    load_game if gets.chomp.downcase == 'yes'
+  end
+
+  def save_game
+    serialized_object = YAML.dump({
+                                    'chances' => @chances,
+                                    'blank' => @display_blanks.blank,
+                                    'secret_word' => @secret_word
+                                  })
+    Dir.mkdir('saves') unless Dir.exist?('saves')
+    File.open('saves/save.yaml', 'w') do |file|
+      file.puts serialized_object
+    end
+  end
+
+  def load_game
+    data = YAML.safe_load File.read('saves/save.yaml')
+    @chances = data['chances']
+    @display_blanks = data['blank']
+  end
+
+  def play # rubocop:disable Metrics/MethodLength,Metrics/AbcSize
     # TODO: Add opportunity to saving progress
     puts 'Game started!'
     secret_word = @random_word_choice.random_word
-    puts 'You have 8 chances to guess a secret word'
+    save_contoller
+    puts "You have #{@chances} chances to guess a secret word"
     puts 'Secret word has been chosen'
     puts "Number of letters: #{secret_word.size}"
     puts secret_word
     display_start(secret_word.size)
-    chances = 8
-    8.times do
-      puts "Remaining attempts: #{chances}"
+    @chances.times do
+      puts "Remaining attempts: #{@chances}"
+      puts 'Do you want save your game and exit?[yes][no]'
+      if gets.chomp.downcase == 'yes'
+        save_game
+        return
+      end
       game_contoller(secret_word)
       if check_winner?
         puts 'Well done! You win!'
         return
       else
-        chances -= 1
+        @chances -= 1
       end
     end
   end

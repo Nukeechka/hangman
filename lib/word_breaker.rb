@@ -48,7 +48,6 @@ class WordBreaker
     puts
   end
 
-  # TODO: Add function - guess word
   def guess_word
     guess = gets.chomp.downcase
     guess.split('').each do |letter|
